@@ -1,7 +1,7 @@
 # 🏗️ Reconstruction Simulation
-**C++ OOP Simulation – SPL Assignment 1 @ BGU**
+**C++ OOP Simulation – SPL 2025 @ BGU**
 
-A modular C++ simulation system designed to evaluate reconstruction strategies in post-war SPLand. Developed as part of the **Systems Programming Lab (SPL)** course at Ben-Gurion University, the system simulates settlements, facilities, and development plans using object-oriented principles and strategic selection policies.
+A modular and extensible C++ simulation designed to model strategic recovery planning in post-war SPLand. Developed as part of the **Systems Programming Lab (SPL)** course at Ben-Gurion University, the system simulates settlements, facilities, and development plans using object-oriented principles and strategic selection policies.
 
 ---
 
@@ -51,6 +51,34 @@ A file named `commands.txt` with a valid example is already included in the root
 - Real-time simulation steps controlled by user-defined actions
 - In-memory simulation snapshot and recovery via backup/restore commands
 - Final report generation on termination
+
+---
+
+## 🔄 Simulation Flow & Concepts
+
+The simulation models the recovery of post-war SPLand by assigning **plans** to **settlements** and constructing **facilities** based on selected **policies**.
+
+### 🧱 Core Concepts
+
+| Concept         | Description |
+|----------------|-------------|
+| **Settlement** | A city, village, or metropolis (type 0/1/2). Each plan is attached to a settlement. |
+| **Facility**   | A buildable structure (e.g. Market, Road, SolarFarm) that improves life quality, economy, and environment scores. |
+| **Plan**       | A strategic development assigned to a settlement. It builds facilities over time according to a selection policy. |
+| **Selection Policy** | Defines how a plan chooses which facility to build next: `nve` (naive), `eco` (economy-focused), `env` (environment-focused), `bal` (balanced). |
+| **Step**       | A time unit in which plans attempt to build a facility. Triggered by the `step` command. |
+| **Backup / Restore** | Allows saving and reverting the simulation state. Useful for branching scenarios. |
+| **Log**        | A chronological list of executed actions. Can be printed using the `log` command. |
+
+### 🔁 Simulation Flow
+
+1. **Initialization**
+   - Simulation reads `config_file.txt` which defines settlements, facilities, and plans **in that order**.
+2. **Execution**
+   - The user interacts with the simulation via commands (manually or via `commands.txt`).
+   - Plans use their policy to select and build facilities step-by-step.
+3. **Finalization**
+   - Upon issuing the `close` command, a final report with scores and statuses is printed.
 
 ---
 
@@ -159,8 +187,6 @@ Each line in the file defines one of the following:
   ```
 
 Lines beginning with `#` are treated as comments.
-
-This file is automatically parsed when the simulation begins and provides the initial world state for the user or command script to build on.
 
 ---
 
