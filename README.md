@@ -1,2 +1,256 @@
-# SPLand
-Assignment 1 - SPL course, BGU
+# 🏗️ Reconstruction Simulation
+**C++ OOP Simulation – SPL Assignment 1 @ BGU**
+
+A modular C++ simulation system designed to evaluate reconstruction strategies in post-war SPLand. Developed as part of the **Systems Programming Lab (SPL)** course at Ben-Gurion University, the system simulates settlements, facilities, and development plans using object-oriented principles and strategic selection policies.
+
+---
+
+## 🔧 Technologies Used
+- **C++11** – Classes, enums, STL containers, Rule of Five
+- **UNIX/Linux** – Required execution environment
+- **Valgrind** – Memory leak detection
+- **Makefile** – Builds the project and generates the final binary in `bin/`
+
+---
+
+## 💡 Project Structure
+```
+.
+├── include/                # Header files (Simulation.h, Plan.h, etc.)
+├── src/                   # Implementation files (.cpp)
+├── bin/                   # Output binary placed here
+├── ExampleInput.txt       # Sample configuration file
+├── makefile               # Build script
+└── README.md
+```
+
+---
+
+## ✨ Features
+- Object-oriented design with support for inheritance and polymorphism
+- Support for multiple settlements and reconstruction plans
+- Four distinct selection strategies: naive, balanced, economy, sustainability
+- Real-time simulation steps controlled by user-defined actions
+- In-memory simulation snapshot and recovery via backup/restore commands
+- Final report generation on termination
+
+---
+
+## 🚀 How to Run the Simulation
+
+### 1. Build
+```bash
+make
+```
+Compiles the project into `bin/simulation`.
+
+### 2. Run with Configuration File
+```bash
+./bin/simulation config_file.txt
+```
+Launches the simulation interactively with predefined data from `config_file.txt`.
+
+### 3. Run with Automated Commands
+You may also provide a sequence of commands using a text file (e.g., `commands.txt`) for automatic execution:
+```bash
+./bin/simulation config_file.txt < commands.txt
+```
+To save the output to a file:
+```bash
+./bin/simulation config_file.txt < commands.txt > output.txt
+```
+
+Example `commands.txt` content:
+```
+step 1
+planStatus 0
+planStatus 1
+settlement anotherVillage 0
+backup
+log
+plan anotherVillage bal
+planStatus 2
+restore
+planStatus 2
+facility road 1 2 1 1 1
+plan anotherVillage bal
+step 2
+planStatus 2
+close
+```
+
+---
+
+## 🧭 Available Commands
+
+Once the simulation is started (either interactively or via a batch file), you may enter the following commands:
+
+| Command                          | Description |
+|----------------------------------|-------------|
+| `settlement <name> <type>`       | Adds a new settlement with the given name and type (`0`: Village, `1`: City, `2`: Metropolis) |
+| `facility <name> <category> <life> <eco> <env> <cost>` | Adds a new facility option (category is an int enum) |
+| `plan <settlement> <policy>`    | Assigns a new development plan to a settlement. Policies: `nve`, `bal`, `eco`, `env` |
+| `step <n>`                       | Simulates `n` time steps |
+| `planStatus <id>`               | Displays the status of plan with given ID |
+| `changePolicy <id> <policy>`    | Changes the selection policy of an existing plan |
+| `log`                            | Prints a history of all executed actions |
+| `backup`                         | Saves the current state of the simulation |
+| `restore`                        | Reverts to the last saved state |
+| `close`                          | Terminates the simulation and prints final summary |
+
+---
+
+## 🗂️ Configuration File Format (`config_file.txt`)
+
+The configuration file initializes the simulation with a predefined setup of settlements, facilities, and plans. It is passed as the first argument to the simulator.
+
+⚠️ **Important:** The lines in this file **must appear in the following order**:
+1. All `settlement` definitions
+2. All `facility` definitions
+3. All `plan` definitions
+
+If the order is not respected (e.g., a plan references a settlement that has not been defined yet), the simulator will throw an error.
+
+Each line in the file defines one of the following:
+
+- A settlement:
+  ```
+  settlement <name> <type>
+  ```
+  Example:
+  ```
+  settlement KfarSPL 0
+  ```
+
+- A facility:
+  ```
+  facility <name> <category> <lifeScore> <ecoScore> <envScore> <cost>
+  ```
+  Example:
+  ```
+  facility Market 1 2 1 2 1
+  ```
+
+- A plan (must reference a known settlement):
+  ```
+  plan <settlement> <policy>
+  ```
+  Example:
+  ```
+  plan KfarSPL eco
+  ```
+
+Lines beginning with `#` are treated as comments.
+
+This file is automatically parsed when the simulation begins and provides the initial world state for the user or command script to build on.
+
+---
+
+## 📄 Output Description
+Throughout the simulation, the user can:
+- Print plan status
+- Advance time steps
+- Log past actions
+- Close and output final results to console
+
+Sample output includes:
+- PlanID, settlement name
+- Current scores (life quality, economy, sustainability)
+- Facility statuses (under construction / operational)
+
+---
+
+## 🧪 Testing
+To validate memory safety:
+```bash
+valgrind --leak-check=full --show-reachable=yes ./bin/simulation ExampleInput.txt
+```
+Expected output:
+```
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts
+```
+
+Ensure compilation includes the following flags:
+```bash
+-g -Wall -Weffc++ -std=c++11 -Iinclude
+```
+
+---
+
+## 📁 Directory Structure
+```
+SPLandSim/
+├── include/
+│   ├── Action.h
+│   ├── Auxiliary.h
+│   ├── Facility.h
+│   ├── Plan.h
+│   ├── SelectionPolicy.h
+│   ├── Settlement.h
+│   └── Simulation.h
+├── src/
+│   ├── Action.cpp
+│   ├── Auxiliary.cpp
+│   ├── Facility.cpp
+│   ├── Plan.cpp
+│   ├── SelectionPolicy.cpp
+│   ├── Settlement.cpp
+│   ├── Simulation.cpp
+│   └── main.cpp
+├── config_file.txt
+├── commands.txt
+├── makefile
+└── README.md
+```
+.
+├── src/
+├── include/
+├── bin/
+├── ExampleInput.txt
+└── makefile
+```
+
+---
+
+## 🔗 Example Configuration
+Example input files are located in the root folder:
+- `ExampleInput.txt`
+
+Each file contains:
+- Initial settlements and their types (village, city, metropolis)
+- Facilities with category, cost, and score contributions
+- Initial plans mapped to settlements and selection policies
+
+See specification PDF for full format.
+
+---
+
+## 📚 Course Information
+- **Course:** SPL – Systems Programming Lab  
+- **Institution:** Ben-Gurion University of the Negev  
+- **Year:** 2025  
+- **Instructor:** Gil Einziger  
+- **TAs:** Nir Sorani  
+- **Environment:** Linux CS Lab, Docker-compatible
+
+---
+
+## 🧑‍💻 Authors
+
+**Ben Kapon**  
+Student at BGU  
+[LinkedIn](https://www.linkedin.com/in/ben-kapon1/)
+
+**Itay Shaul**  
+Student at BGU  
+[LinkedIn](https://www.linkedin.com/in/itay-shaul/)
+
+---
+
+## 📝 Important Note
+This project was developed and tested on a **Docker-compatible Linux environment**.  
+Ensure your submission compiles and runs with no warnings or memory leaks on CS Lab machines.
+
+> This project demonstrates dynamic simulation of strategic development plans using OOP, memory-safe design, and user-driven commands in C++.
+

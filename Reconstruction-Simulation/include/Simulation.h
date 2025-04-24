@@ -6,6 +6,7 @@
 #include "SelectionPolicy.h"
 #include "Settlement.h"
 #include "Auxiliary.h"
+#include <unistd.h>
 
 #include <algorithm>
 #include <fstream>

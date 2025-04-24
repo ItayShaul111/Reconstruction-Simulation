@@ -212,7 +212,10 @@ void Simulation::start() {
 
     while (isRunning) { // As long as we didn't command 'close'
         string line;
-        cout << "Enter an action: ";
+        if (isatty(fileno(stdin))) {
+            cout << "Enter an action: ";
+        }
+        
         getline(cin, line); // Read the entire line of input from the user
 
         vector<string> args = Auxiliary::parseArguments(line);
