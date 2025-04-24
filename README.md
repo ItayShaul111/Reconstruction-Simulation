@@ -15,14 +15,32 @@ A modular C++ simulation system designed to evaluate reconstruction strategies i
 
 ## 💡 Project Structure
 ```
-.
-├── include/                # Header files (Simulation.h, Plan.h, etc.)
-├── src/                   # Implementation files (.cpp)
-├── bin/                   # Output binary placed here
-├── ExampleInput.txt       # Sample configuration file
-├── makefile               # Build script
-└── README.md
+Reconstruction-Simulation/
+├── bin/                      # Output binary placed here
+├── include/                  # Header files
+│   ├── Action.h
+│   ├── Auxiliary.h
+│   ├── Facility.h
+│   ├── Plan.h
+│   ├── SelectionPolicy.h
+│   ├── Settlement.h
+│   └── Simulation.h
+├── src/                      # Implementation files (.cpp)
+│   ├── Action.cpp
+│   ├── Auxiliary.cpp
+│   ├── Facility.cpp
+│   ├── Plan.cpp
+│   ├── SelectionPolicy.cpp
+│   ├── Settlement.cpp
+│   ├── Simulation.cpp
+│   └── main.cpp
+├── config_file.txt           # Sample configuration file
+├── commands.txt              # Sample automated command sequence
+├── makefile                  # Build script
+└── README.md                 # Project documentation
 ```
+
+A file named `commands.txt` with a valid example is already included in the root directory.
 
 ---
 
@@ -61,7 +79,7 @@ To save the output to a file:
 ```
 
 Example `commands.txt` content:
-```
+```txt
 step 1
 planStatus 0
 planStatus 1
@@ -147,11 +165,14 @@ This file is automatically parsed when the simulation begins and provides the in
 ---
 
 ## 📄 Output Description
+
 Throughout the simulation, the user can:
-- Print plan status
-- Advance time steps
-- Log past actions
-- Close and output final results to console
+- Print the status of any plan
+- Advance simulation steps
+- Change plan policies
+- Track action history
+- Save and restore state
+- Terminate the simulation with a final report
 
 Sample output includes:
 - PlanID, settlement name
@@ -163,7 +184,7 @@ Sample output includes:
 ## 🧪 Testing
 To validate memory safety:
 ```bash
-valgrind --leak-check=full --show-reachable=yes ./bin/simulation ExampleInput.txt
+valgrind --leak-check=full --show-reachable=yes ./bin/simulation config_file.txt
 ```
 Expected output:
 ```
@@ -171,58 +192,12 @@ All heap blocks were freed -- no leaks are possible
 ERROR SUMMARY: 0 errors from 0 contexts
 ```
 
+⚠️ Make sure to compile with `-g` flag to enable line-level debugging with valgrind.
+
 Ensure compilation includes the following flags:
 ```bash
 -g -Wall -Weffc++ -std=c++11 -Iinclude
 ```
-
----
-
-## 📁 Directory Structure
-```
-SPLandSim/
-├── include/
-│   ├── Action.h
-│   ├── Auxiliary.h
-│   ├── Facility.h
-│   ├── Plan.h
-│   ├── SelectionPolicy.h
-│   ├── Settlement.h
-│   └── Simulation.h
-├── src/
-│   ├── Action.cpp
-│   ├── Auxiliary.cpp
-│   ├── Facility.cpp
-│   ├── Plan.cpp
-│   ├── SelectionPolicy.cpp
-│   ├── Settlement.cpp
-│   ├── Simulation.cpp
-│   └── main.cpp
-├── config_file.txt
-├── commands.txt
-├── makefile
-└── README.md
-```
-.
-├── src/
-├── include/
-├── bin/
-├── ExampleInput.txt
-└── makefile
-```
-
----
-
-## 🔗 Example Configuration
-Example input files are located in the root folder:
-- `ExampleInput.txt`
-
-Each file contains:
-- Initial settlements and their types (village, city, metropolis)
-- Facilities with category, cost, and score contributions
-- Initial plans mapped to settlements and selection policies
-
-See specification PDF for full format.
 
 ---
 
